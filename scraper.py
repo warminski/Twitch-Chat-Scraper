@@ -5,10 +5,11 @@ from selenium.webdriver.common.by import By
 from datetime import datetime
 from csv import writer
 
-print("please provide stream name")
-stream = input()
-print("creating file, please provide name")
-file_name = input()
+#provide stream name
+stream = "https://www.twitch.tv/xqc"
+
+#provide file name
+file_name = "xqc.csv"
 
 # settings
 ser = Service("chromedriver/chromedriver.exe")
@@ -17,8 +18,8 @@ op = webdriver.ChromeOptions()
 driver = webdriver.Chrome(service=ser, options=op)
 
 
-driver.get(f'https://www.twitch.tv/{stream}')  # link to twitch streamer
-with open(f'{file_name}.csv', 'w+', newline='', encoding="utf-8") as file:
+driver.get(f'{stream}')  # link to twitch streamer
+with open(f'{file_name}', 'w+', newline='', encoding="utf-8") as file:
     writer_object = writer(file)
     while True:
         try:
