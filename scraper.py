@@ -18,7 +18,7 @@ driver = webdriver.Chrome(service=ser, options=op)
 
 
 driver.get(f'https://www.twitch.tv/{stream}')  # link to twitch streamer
-with open(f'{file_name}.csv', 'w+', encoding="utf-8") as file:
+with open(f'{file_name}.csv', 'w+', newline='', encoding="utf-8") as file:
     writer_object = writer(file)
     while True:
         try:
