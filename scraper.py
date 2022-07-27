@@ -22,7 +22,7 @@ driver = webdriver.Chrome(service=ser, options=op)
 
 
 driver.get(f'{stream}')  # link to twitch streamer
-with open(f'{file_name}', 'w+', newline='', encoding="utf-8") as file:
+with open(f'{file_name}', 'a+', newline='', encoding="utf-8") as file:
     writer_object = writer(file)
     while True:
         try:
