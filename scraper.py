@@ -27,7 +27,7 @@ with open(f'{file_name}', 'a+', newline='', encoding="utf-8") as file:
     while True:
         try:
             if len(driver.find_elements(By.CLASS_NAME, "chat-line__message")) == 0:
-                pass
+                continue
             else:
                 old_messages = driver.find_elements(By.CLASS_NAME, "chat-line__message")
                 t.sleep(3)  # wait for new messages
@@ -43,7 +43,7 @@ with open(f'{file_name}', 'a+', newline='', encoding="utf-8") as file:
                         writer_object.writerow(row)
 
         except selenium.common.NoSuchElementException:  # continue working even without messages
-            pass
+            continue
 
 
 
