@@ -15,7 +15,9 @@ file_name = "xqc.csv"
 # settings
 ser = Service("chromedriver/chromedriver.exe")
 op = webdriver.ChromeOptions()
-# op.headless = True  # doesn't work
+op.add_argument('--headless')
+op.add_argument('window-size=1920x1080')
+
 driver = webdriver.Chrome(service=ser, options=op)
 
 
