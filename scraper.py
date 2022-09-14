@@ -6,46 +6,46 @@ from datetime import datetime
 from csv import writer
 import time as t
 
-#provide stream name
+# provide stream name
 stream = "https://www.twitch.tv/xqc"
 
-#provide file name
+# provide file name
 file_name = "xqc.csv"
 
+
 # settings
-ser = Service("chromedriver/chromedriver.exe")
-op = webdriver.ChromeOptions()
-op.add_argument('--headless')
-op.add_argument('window-size=1920x1080')
+def load_settings():
+    ser = Service("chromedriver/chromedriver.exe")
+    op = webdriver.ChromeOptions()
+    op.add_argument('--headless')
+    op.add_argument('window-size=1920x1080')
+    driver = webdriver.Chrome(service=ser, options=op)
+    return driver
 
-driver = webdriver.Chrome(service=ser, options=op)
 
+if __name__ == "__main__":
+    loaded_driver = load_settings()
+    loaded_driver.get(f'{stream}')  # link to twitch streamer
+    t.sleep(5)  # wait for website to load
+    with open(f'{file_name}', 'a+', newline='', encoding="utf-8") as file:
+        writer_object = writer(file)
+        while True:
+            try:
+                if len(loaded_driver.find_elements(By.CLASS_NAME, "chat-line__message")) == 0:
+                    continue
+                else:
+                    old_messages = loaded_driver.find_elements(By.CLASS_NAME, "chat-line__message")
+                    t.sleep(3)  # wait for new messages
+                    new_messages = loaded_driver.find_elements(By.CLASS_NAME, "chat-line__message")
+                    for i in new_messages:
+                        if i not in old_messages:  # avoid adding copies of the same message
+                            username = i.find_element(By.CLASS_NAME, "chat-author__display-name").text
+                            message_text = i.find_element(By.CLASS_NAME, "text-fragment").text
+                            time = datetime.now()
+                            day_string = time.strftime("%d/%m/%Y")  # format datetime
+                            time_string = time.strftime("%H:%M:%S")  # format datetime
+                            row = [day_string, time_string, username, message_text]
+                            writer_object.writerow(row)
 
-driver.get(f'{stream}')  # link to twitch streamer
-t.sleep(5)  # wait for website to load
-with open(f'{file_name}', 'a+', newline='', encoding="utf-8") as file:
-    writer_object = writer(file)
-    while True:
-        try:
-            if len(driver.find_elements(By.CLASS_NAME, "chat-line__message")) == 0:
+            except selenium.common.NoSuchElementException:  # continue working even without messages
                 continue
-            else:
-                old_messages = driver.find_elements(By.CLASS_NAME, "chat-line__message")
-                t.sleep(3)  # wait for new messages
-                new_messages = driver.find_elements(By.CLASS_NAME, "chat-line__message")
-                for i in new_messages:
-                    if i not in old_messages:  # avoid adding copies of the same message
-                        username = i.find_element(By.CLASS_NAME, "chat-author__display-name").text
-                        message_text = i.find_element(By.CLASS_NAME, "text-fragment").text
-                        time = datetime.now()
-                        day_string = time.strftime("%d/%m/%Y")  # format datetime
-                        time_string = time.strftime("%H:%M:%S")  # format datetime
-                        row = [day_string, time_string, username, message_text]
-                        writer_object.writerow(row)
-
-        except selenium.common.NoSuchElementException:  # continue working even without messages
-            continue
-
-
-
-
